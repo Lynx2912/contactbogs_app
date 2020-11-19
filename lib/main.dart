@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:HolionApp/camera.dart';
@@ -56,41 +57,26 @@ class _MyHomePageState extends State<MyHomePage> {
     fillList();
   }
 
-  void fillList() {
-    Person niels = Person(
-        'assets/images/logo.png',
-        'assets/images/Anmærkning 2020-11-17 115919.png',
-        'Niels',
-        '40',
-        'Chef',
-        'Parboiledris med en smørklat');
+  Future<String> getFilePath() async {
+    Directory appDocumentsDirectory =
+        await getApplicationDocumentsDirectory(); // 1
+    String appDocumentsPath = appDocumentsDirectory.path; // 2
+    String filePath = '$appDocumentsPath/demoTextFile.txt'; // 3
 
-    Person mads = Person(
-        'assets/images/logo.png',
-        'assets/images/20201117_083915.jpg',
-        'Mads',
-        '27',
-        'Programmør',
-        'Rødt kød');
+    return filePath;
+  }
 
-    Person lukas = Person(
-        'assets/images/logo.png',
-        'assets/images/20201117_083919.jpg',
-        'Lukas',
-        '15',
-        'Practikant',
-        'Australsk burger');
-    Person mathias = Person(
-        'assets/images/logo.png',
-        'assets/images/20201117_083924.jpg',
-        'Mathias',
-        '23',
-        'Programmør',
-        'Alt med sovs');
-    personList.add(niels);
-    personList.add(mads);
-    personList.add(lukas);
-    personList.add(mathias);
+  void fillList() async {
+    final filename =
+        join((await getApplicationDocumentsDirectory()).path, 'persons.json');
+    try {
+      File file = File(filename);
+      var fileContent = await file.readAsString();
+      var personMap = jsonDecode(fileContent);
+      personList =
+          List.from(personMap).map((model) => Person.fromJson(model)).toList();
+      setState(() {});
+    } catch (ex) {}
   }
 
   @override
@@ -98,6 +84,15 @@ class _MyHomePageState extends State<MyHomePage> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text('Text'),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Text(
+          '+',
+          style: TextStyle(fontSize: 36.0),
+        ),
+        onPressed: () {
+          _navigateToNextScreen(context);
+        },
       ),
       body: new Swiper(
         itemBuilder: (BuildContext context, int index) {
@@ -168,15 +163,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 alignment: Alignment.topRight),
           ],
         ),
-        RaisedButton(
-          child: Text(
-            'Navigate to a new screen >>',
-            style: TextStyle(fontSize: 24.0),
-          ),
-          onPressed: () {
-            _navigateToNextScreen(context);
-          },
-        )
       ],
     ));
   }
@@ -276,7 +262,7 @@ class MyCustomForm extends State<NewScreen> {
                       path = join(
                         // Store the picture in the temp directory.
                         // Find the temp directory using the `path_provider` plugin.
-                        (await getTemporaryDirectory()).path,
+                        (await getApplicationDocumentsDirectory()).path,
                         '${DateTime.now()}.png',
                       );
 
@@ -287,8 +273,11 @@ class MyCustomForm extends State<NewScreen> {
                           .then((value) => setState(() {}));
                     }),
                 ElevatedButton(
-                  child: Text('Submit'),
-                  onPressed: () {
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(fontSize: 24.0),
+                  ),
+                  onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       widget.persons.add(Person(
                           'assets/images/logo.png',
@@ -297,6 +286,14 @@ class MyCustomForm extends State<NewScreen> {
                           _alderController.text,
                           _jobController.text,
                           _retController.text));
+
+                      print(jsonEncode(widget.persons));
+
+                      final filename = join(
+                          (await getApplicationDocumentsDirectory()).path,
+                          'persons.json');
+                      File file = File(filename);
+                      file.writeAsString(jsonEncode(widget.persons)); // 2
 
                       Navigator.pop(context);
                     }
