@@ -1,7 +1,13 @@
+import 'dart:io';
+
+import 'package:HolionApp/camera.dart';
 import 'package:HolionApp/models/profilemodel.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -95,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: new Swiper(
         itemBuilder: (BuildContext context, int index) {
-          return display(personList[index]);
+          return display(context, personList[index]);
         },
         itemCount: personList.length,
         pagination: new SwiperPagination(),
@@ -111,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
         .then((value) => setState(() {}));
   }
 
-  Widget display(Person person) {
+  Widget display(BuildContext context, Person person) {
     return Container(
         child: Column(
       children: [
@@ -124,13 +130,16 @@ class _MyHomePageState extends State<MyHomePage> {
             image: AssetImage(person.firma),
           ),
         ),
-        new Container(
-            width: 450.0,
-            height: 450.0,
-            decoration: new BoxDecoration(
-                shape: BoxShape.circle,
-                image: new DecorationImage(
-                    fit: BoxFit.fill, image: new AssetImage(person.billed)))),
+        if (!person.billed.contains('assets'))
+          CircleAvatar(
+            backgroundImage: new FileImage(File(person.billed)),
+            radius: 230.0,
+          ),
+        if (person.billed.contains('assets'))
+          CircleAvatar(
+            backgroundImage: AssetImage(person.billed),
+            radius: 230.0,
+          ),
         Row(children: [
           Text('Navn: ', style: TextStyle(fontSize: 25)),
           Text(person.navn, style: TextStyle(fontSize: 25)),
@@ -191,6 +200,8 @@ class MyCustomForm extends State<NewScreen> {
   TextEditingController _alderController = TextEditingController();
   TextEditingController _jobController = TextEditingController();
   TextEditingController _retController = TextEditingController();
+
+  String path;
 
   @override
   Widget build(BuildContext context) {
@@ -256,12 +267,32 @@ class MyCustomForm extends State<NewScreen> {
                     ) // Add TextFormFields and ElevatedButton here.
                     ),
                 ElevatedButton(
+                    child: Text('Camera', style: TextStyle(fontSize: 24.0)),
+                    onPressed: () async {
+                      WidgetsFlutterBinding.ensureInitialized();
+                      final cameras = await availableCameras();
+                      final firstCamera = cameras.first;
+
+                      path = join(
+                        // Store the picture in the temp directory.
+                        // Find the temp directory using the `path_provider` plugin.
+                        (await getTemporaryDirectory()).path,
+                        '${DateTime.now()}.png',
+                      );
+
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(
+                              builder: (context) => TakePictureScreen(
+                                  camera: firstCamera, path: path)))
+                          .then((value) => setState(() {}));
+                    }),
+                ElevatedButton(
                   child: Text('Submit'),
                   onPressed: () {
                     if (_formKey.currentState.validate()) {
                       widget.persons.add(Person(
                           'assets/images/logo.png',
-                          'assets/images/Anmærkning 2020-11-17 115919.png',
+                          path,
                           _navnController.text,
                           _alderController.text,
                           _jobController.text,
