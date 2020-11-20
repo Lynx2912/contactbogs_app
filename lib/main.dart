@@ -52,6 +52,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List personList = List();
+  List persons;
 
   _MyHomePageState() {
     fillList();
@@ -94,13 +95,27 @@ class _MyHomePageState extends State<MyHomePage> {
           _navigateToNextScreen(context);
         },
       ),
-      body: new Swiper(
-        itemBuilder: (BuildContext context, int index) {
-          return display(context, personList[index]);
-        },
-        itemCount: personList.length,
-        pagination: new SwiperPagination(),
-        control: new SwiperControl(),
+      body: Container(
+        child: Stack(
+          children: [
+            if (personList.length > 0)
+              new Swiper(
+                key: UniqueKey(),
+                itemBuilder: (BuildContext context, int index) {
+                  return display(context, personList[index]);
+                },
+                itemCount: personList.length,
+                pagination: new SwiperPagination(),
+                control: new SwiperControl(),
+              ),
+            if (personList.length == 0)
+              Center(
+                  child: Text(
+                'vær sød at tilføge flere personer',
+                style: TextStyle(fontSize: 24.0),
+              ))
+          ],
+        ),
       ),
     );
   }
@@ -124,6 +139,14 @@ class _MyHomePageState extends State<MyHomePage> {
             fit: BoxFit.fill,
             image: AssetImage(person.firma),
           ),
+        ),
+        RaisedButton(
+          child: Text('Fjern Person', style: TextStyle(fontSize: 24.0)),
+          onPressed: () {
+            personList.remove(person);
+            print(jsonEncode(widget.person));
+            setState(() {});
+          },
         ),
         if (!person.billed.contains('assets'))
           CircleAvatar(
