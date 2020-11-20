@@ -133,8 +133,9 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget display(BuildContext context, Person person, List persons) {
-    return Container(
-        child: Column(
+    return Center(
+        child: SingleChildScrollView(
+            child: Column(
       children: [
         Padding(
           padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
@@ -208,6 +209,6 @@ class _MyHomePageState extends State<MyHomePage> {
               _navigateToNewScreen(context, person, persons);
             })
       ],
-    ));
+    )));
   }
 }
