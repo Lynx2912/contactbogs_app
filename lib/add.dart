@@ -8,6 +8,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'camera.dart';
+import 'models/profilemodel.dart';
 
 class NewScreen extends StatefulWidget {
   List persons;
