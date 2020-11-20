@@ -43,60 +43,72 @@ class MyCustomForm2 extends State<EditScreen> {
         body: Form(
             key: _formKey,
             child: Column(children: <Widget>[
-              TextFormField(
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  controller: _navnController,
-                  decoration: InputDecoration(
-                    hintText: 'navn',
-                    counterText: '0 characters',
-                    border: const OutlineInputBorder(),
-                  )),
-              TextFormField(
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  // The validator receives the text that the user has entered.
-                  controller: _alderController,
-                  decoration: InputDecoration(
-                    hintText: 'Alder',
-                    counterText: '0 characters',
-                    border: const OutlineInputBorder(),
-                  )),
-              TextFormField(
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  controller: _jobController,
-                  decoration: InputDecoration(
-                    hintText: 'Job',
-                    counterText: '0 characters',
-                    border: const OutlineInputBorder(),
-                  )),
-              TextFormField(
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  controller: _retController,
-                  decoration: InputDecoration(
-                    hintText: 'Ynglingsret',
-                    counterText: '0 characters',
-                    border: const OutlineInputBorder(),
-                  ) // Add TextFormFields and ElevatedButton here.
-                  ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                child: TextFormField(
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    controller: _navnController,
+                    decoration: InputDecoration(
+                      hintText: 'navn',
+                      counterText: '0 characters',
+                      border: const OutlineInputBorder(),
+                    )),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                child: TextFormField(
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    // The validator receives the text that the user has entered.
+                    controller: _alderController,
+                    decoration: InputDecoration(
+                      hintText: 'Alder',
+                      counterText: '0 characters',
+                      border: const OutlineInputBorder(),
+                    )),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                child: TextFormField(
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    controller: _jobController,
+                    decoration: InputDecoration(
+                      hintText: 'Job',
+                      counterText: '0 characters',
+                      border: const OutlineInputBorder(),
+                    )),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                child: TextFormField(
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return 'Please enter some text';
+                      }
+                      return null;
+                    },
+                    controller: _retController,
+                    decoration: InputDecoration(
+                      hintText: 'Ynglingsret',
+                      counterText: '0 characters',
+                      border: const OutlineInputBorder(),
+                    ) // Add TextFormFields and ElevatedButton here.
+                    ),
+              ),
               ElevatedButton(
                   child: Text(
                     'gem',
