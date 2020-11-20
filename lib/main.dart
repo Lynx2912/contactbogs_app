@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> {
               new Swiper(
                 key: UniqueKey(),
                 itemBuilder: (BuildContext context, int index) {
-                  return display(context, personList[index]);
+                  return display(context, personList[index], personList);
                 },
                 itemCount: personList.length,
                 pagination: new SwiperPagination(),
@@ -126,13 +126,14 @@ class _MyHomePageState extends State<MyHomePage> {
         .then((value) => setState(() {}));
   }
 
-  void _navigateToNewScreen(BuildContext context, Person person) {
+  void _navigateToNewScreen(BuildContext context, Person person, List persons) {
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => EditScreen(person)))
+        .push(MaterialPageRoute(
+            builder: (context) => EditScreen(person, persons)))
         .then((value) => setState(() {}));
   }
 
-  Widget display(BuildContext context, Person person) {
+  Widget display(BuildContext context, Person person, List persons) {
     return Container(
         child: Column(
       children: [
@@ -205,7 +206,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: TextStyle(fontSize: 20.0),
             ),
             onPressed: () {
-              _navigateToNewScreen(context, person);
+              _navigateToNewScreen(context, person, persons);
             })
       ],
     ));
@@ -215,7 +216,7 @@ class _MyHomePageState extends State<MyHomePage> {
 class EditScreen extends StatefulWidget {
   Person person;
   List persons;
-  EditScreen(this.person);
+  EditScreen(this.person, this.persons);
   State<StatefulWidget> createState() {
     return MyCustomForm2();
   }
@@ -443,17 +444,19 @@ class MyCustomForm2 extends State<EditScreen> {
                     style: TextStyle(fontSize: 24.0),
                   ),
                   onPressed: () async {
-                    widget.person.navn = _navnController.text;
-                    widget.person.alder = _alderController.text;
-                    widget.person.job = _jobController.text;
-                    widget.person.ynglingsret = _retController.text;
-                    print(jsonEncode(widget.person));
-                    final filename = join(
-                        (await getApplicationDocumentsDirectory()).path,
-                        'persons.json');
-                    File file = File(filename);
-                    file.writeAsString(jsonEncode(widget.person));
-                    Navigator.pop(context);
+                    if (_formKey.currentState.validate()) {
+                      widget.person.navn = _navnController.text;
+                      widget.person.alder = _alderController.text;
+                      widget.person.job = _jobController.text;
+                      widget.person.ynglingsret = _retController.text;
+                      print(jsonEncode(widget.person));
+                      final filename = join(
+                          (await getApplicationDocumentsDirectory()).path,
+                          'persons.json');
+                      File file = File(filename);
+                      await file.writeAsString(jsonEncode(widget.persons));
+                      Navigator.pop(context);
+                    }
                   })
             ])));
   }
