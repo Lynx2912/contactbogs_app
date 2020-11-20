@@ -11,7 +11,7 @@ import 'camera.dart';
 import 'models/profilemodel.dart';
 
 class NewScreen extends StatefulWidget {
-  List persons;
+  final List persons;
 
   NewScreen(this.persons);
 

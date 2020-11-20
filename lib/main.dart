@@ -44,9 +44,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-  List persons;
   final String title;
-  String path;
   @override
   _MyHomePageState createState() => new _MyHomePageState();
 }

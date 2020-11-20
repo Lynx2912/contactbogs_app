@@ -9,8 +9,8 @@ import 'package:path_provider/path_provider.dart';
 import 'models/profilemodel.dart';
 
 class EditScreen extends StatefulWidget {
-  Person person;
-  List persons;
+  final Person person;
+  final List persons;
   EditScreen(this.person, this.persons);
   State<StatefulWidget> createState() {
     return MyCustomForm2();
@@ -24,7 +24,7 @@ class MyCustomForm2 extends State<EditScreen> {
   TextEditingController _jobController = TextEditingController();
   TextEditingController _retController = TextEditingController();
 
-  MyCustomForm2() {}
+  MyCustomForm2();
 
   @override
   void initState() {
