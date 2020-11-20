@@ -45,7 +45,7 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
   List persons;
   final String title;
-
+  String path;
   @override
   _MyHomePageState createState() => new _MyHomePageState();
 }
@@ -141,9 +141,17 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         RaisedButton(
           child: Text('Fjern Person', style: TextStyle(fontSize: 24.0)),
-          onPressed: () {
+          onPressed: () async {
             personList.remove(person);
-            print(jsonEncode(widget.persons));
+            var newlist = jsonEncode(personList);
+            final filename = join(
+                (await getApplicationDocumentsDirectory()).path,
+                'persons.json');
+            File file = File(filename);
+
+            file.delete();
+            file.writeAsString(newlist);
+
             setState(() {});
           },
         ),
