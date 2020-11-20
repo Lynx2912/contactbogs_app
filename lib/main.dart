@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
-
+  List persons;
   final String title;
 
   @override
@@ -52,7 +52,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List personList = List();
-  List persons;
 
   _MyHomePageState() {
     fillList();
@@ -144,7 +143,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Text('Fjern Person', style: TextStyle(fontSize: 24.0)),
           onPressed: () {
             personList.remove(person);
-            print(jsonEncode(widget.person));
+            print(jsonEncode(widget.persons));
             setState(() {});
           },
         ),
